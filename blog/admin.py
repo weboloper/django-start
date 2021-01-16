@@ -1,5 +1,5 @@
 from django.contrib import admin
-from blog.models import  StaticPage, Post, NewsEntry, Category
+from blog.models import  StaticPage, Post, NewsEntry, Category, Comment
 from core.admin import AbstractNodeModelAdmin
 # Register your models here.
 
@@ -17,6 +17,7 @@ class NewsAdmin(AbstractNodeModelAdmin):
  
 
 
+admin.site.register(Comment)
 admin.site.register(Category)
 admin.site.register(Post, PostAdmin)
 admin.site.register(NewsEntry, NewsAdmin)

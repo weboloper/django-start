@@ -7,6 +7,11 @@ from main.views import IndexPageView, ChangeLanguageView
 from blog.views import StaticPageView
 from core.api.views import upload_attachment_url
 
+from blog.sitemaps import StaticPageSitemap, PostSitemap
+from django.contrib.sitemaps.views import sitemap
+
+sitemaps = {'pages': StaticPageSitemap, 'posts' : PostSitemap }
+
 urlpatterns = [
     path('admin/', admin.site.urls),
 
@@ -24,8 +29,11 @@ urlpatterns = [
     path('tinymce/', include('tinymce.urls')),
 
     path('blog/', include('blog.urls')),
-  
+    
+    
     re_path(r'^(?P<full_slug>(.*))/$', StaticPageView.as_view(), name='static_page' ),
+
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}),
     
 ]
 

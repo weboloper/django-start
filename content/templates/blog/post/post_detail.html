@@ -1,13 +1,22 @@
 {% extends 'layouts/default/page.html' %}
 
-{% load i18n %}  {% load core_tags %} 
+{% load i18n %}  {% load core_tags %} {% load blog_tags %} 
 {% load thumbnail %}
+{% load bootstrap4 %}
 
 {% block content %}
-    <h1>{{ post.title}}</h1>
-    
-    {{ post.content | safe }}
+     
 
-    {{ post.featured_image.get_image_url }}
+    {% get_comments for post as comments_list %}
+    {% get_comments_count for post as comments_count %}
+ 
+    
+
+    <form method="post">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <button class="btn btn-success">{% trans 'Add Comment' %}</button>
+    </form>
+
 
 {% endblock %}

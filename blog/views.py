@@ -4,7 +4,9 @@ from django.contrib import messages
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import TemplateView, DetailView, ListView
 from django.http import Http404
-from blog.models import StaticPage, Post, Category
+from blog.models import StaticPage, Post, Category, Comment
+from blog.forms import CommentForm
+from django.views.generic.edit import FormMixin, FormView
 
 # Create your views here.
 class StaticPageView(DetailView):
@@ -37,10 +39,12 @@ class PostListView(ListView):
     def get_queryset(self):
         return self.model.objects.published()
 
-class PostDetailView(DetailView):
+class PostDetailView(FormMixin, DetailView):
     template_name = 'blog/post/post_detail.html'
     model = Post
     context_object_name = 'post'
+    form_class = CommentForm
+    success_url= '/'
 
     def get_object(self):
     
@@ -67,6 +71,27 @@ class PostDetailView(DetailView):
             return obj
         else:
             raise  Http404()
+        
+    def get_success_url(self):
+        return self.get_object().get_absolute_url()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["comments"] = Comment.objects.filter(entry=self.object, is_public=True)
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.entry = self.get_object()
+            comment.save()
+            return self.form_valid(form)
+        else:
+            print("Invalid form")
+            return self.form_invalid(form)
     
 class PostByCategoryListView(ListView):
     template_name = 'blog/post/post_list.html'
@@ -74,6 +99,7 @@ class PostByCategoryListView(ListView):
     paginate_by = 4
     allow_empty = False
     model = Post
+    allow_empty=True
 
     def get_queryset(self):
         return self.model.objects.list_by_category_slug(self.kwargs['slug'])

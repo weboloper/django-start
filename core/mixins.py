@@ -168,7 +168,8 @@ class PublishMixin(models.Model):
                 )
 
     def save(self, *args, **kwargs):
-        if self.status == self.CONTENT_STATUS_PUBLISHED  and not self.published_at:
+        # if self.status == self.CONTENT_STATUS_PUBLISHED  and not self.published_at:
+        if not self.published_at:
             self.published_at = timezone.now()
         return super(PublishMixin, self).save(*args, **kwargs)
 

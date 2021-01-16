@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'django.contrib.sitemaps',
 
     # Vendor apps
     'bootstrap4',
@@ -102,7 +103,12 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTH_USER_MODEL = 'accounts.User'
 
-
+"""
+MODERATION SETTINGS
+"""
+AKISMET_API_KEY = 'YOUR_AKISMET_API_KEY'
+DELETE_SPAM_COMMENT = False
+BAN_NON_CJK = True
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
 
