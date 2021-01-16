@@ -1,0 +1,18 @@
+{% extends 'layouts/default/page.html' %}
+
+{% load i18n %}  {% load core_tags %} 
+{% load thumbnail %}
+
+{% block content %}
+     {% if category %}
+          <h1>{{category.title}}</h1>
+     {% endif %} 
+     {% for post in posts %}
+          <h2><a href="{{ post.get_absolute_url}}">{{ post.title}}</a></h2>
+          {% thumbnail post.featured_image.guid '200x200' crop='center' as im %}
+               <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"/>
+          {% endthumbnail %}
+     {% endfor %}
+
+ 
+{% endblock %}

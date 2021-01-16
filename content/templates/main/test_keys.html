@@ -1,0 +1,66 @@
+{% extends 'layouts/default/page.html' %}
+
+{% load i18n %}  {% load core_tags %} 
+
+{% block content %}
+    {% get_siteinfo as site %}
+    <table class="table table-bordered">
+        <thead>
+            <tr><th>Tag</th> <th>Code</th> <th>Value</th> </tr>
+        </thead>
+        <tbody>
+
+            <tr>
+                <td>Get Site Info</td>
+                <td> <code>{% verbatim %} {% get_siteinfo as site %} {{ site.title }}   {% endverbatim %}</code>  </td>
+                <td>  {{ site.title }} </td>
+            </tr>
+
+            <tr>
+                <td>Get Single Meta</td>
+                <td> <code>{% verbatim %} {% get_meta object 'meta_key1' %}    {% endverbatim %}</code>  </td>
+                <td> {% get_meta object 'meta_key1' %} </td>
+            </tr>
+
+            <tr>
+                <td>Get Multiple Meta</td>
+                <td> <code>{% verbatim %} {% get_meta object 'meta_key1' False  %}    {% endverbatim %}</code>  </td>
+                <td> {% get_meta object 'meta_key1' False  %} </td>
+            </tr>
+
+            <tr>
+                <td>Set Multiple Meta</td>
+                <td> <code>{% verbatim %} {% get_meta object 'meta_key1' False as meta_list %}     {% endverbatim %}</code>  </td>
+                <td>  {% get_meta object 'meta_key1' False as meta_list %} {{ meta_list}} </td>
+            </tr>
+
+            <tr>
+                <td>User can edit</td>
+                <td> <code>{% verbatim %} {% if user|can_edit:object %}     {% endverbatim %}</code>  </td>
+                <td>  returns bool </td>
+            </tr>
+
+            <tr>
+                <td>Object admin url</td>
+                <td> <code>{% verbatim %} {{ object.url_to_edit_object }}   {% endverbatim %}</code>  </td>
+                <td> {{ object.url_to_edit_object }} </td>
+            </tr>
+
+            <tr>
+                <td>User has permission</td>
+                <td> <code>{% verbatim %} {% has_permission  request.user 'change_proxx' as has_permission_update %}    {% endverbatim %}</code>  </td>
+                <td>  returns bool </td>
+            </tr>
+
+            <tr>
+                <td>User has role</td>
+                <td> <code>{% verbatim %} {% has_role request.user 'CLIENTE' as has_role_cliente %}   {% endverbatim %}</code>  </td>
+                <td> returns bool </td>
+            </tr>
+
+ 
+
+        </tbody>
+    </table>
+
+{% endblock %}

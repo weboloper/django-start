@@ -1,0 +1,13 @@
+{% extends 'layouts/default/page.html' %}
+
+{% load i18n %}  {% load core_tags %} 
+{% load thumbnail %}
+
+{% block content %}
+    <h1>{{ post.title}}</h1>
+    
+    {{ post.content | safe }}
+
+    {{ post.featured_image.get_image_url }}
+
+{% endblock %}
