@@ -4,31 +4,9 @@ from django.contrib import messages
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import TemplateView, DetailView, ListView
 from django.http import Http404
-from blog.models import StaticPage, Post, Category, Comment
+from blog.models import Post, Category, Comment
 from blog.forms import CommentForm
 from django.views.generic.edit import FormMixin, FormView
-
-# Create your views here.
-class StaticPageView(DetailView):
-    template_name = 'blog/static_page.html'
-    model = StaticPage
-
-    def get_object(self):
-
-        if 'full_slug' in self.kwargs:
-            full_slug = self.kwargs['full_slug']
-            slugs = full_slug.split('/')
-            page_slug = slugs[-1]
-    
-            obj =  get_object_or_404(self.model, slug=page_slug)
-    
-            if obj.is_viewable(self.request.user):
-                if obj.is_published() == False:
-                    messages.add_message(self.request, messages.INFO, _('Page is not viewable : '+ obj.get_status_display()))
-                return obj
-        
-        raise  Http404()
-
 
 class PostListView(ListView):
     template_name = 'blog/post/post_list.html'
@@ -102,12 +80,24 @@ class PostByCategoryListView(ListView):
     allow_empty=True
 
     def get_queryset(self):
-        return self.model.objects.list_by_category_slug(self.kwargs['slug'])
+        if 'slug' in self.kwargs:
+            slug = self.kwargs['slug']
+            slugs = slug.split('/')
+            category_slug = slugs[-1]
+            return self.model.objects.list_by_category_slug( category_slug )
+        return None
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        
         context = super().get_context_data(**kwargs)
-        category = get_object_or_404(Category, slug=self.kwargs['slug'])
+        if 'slug' in self.kwargs:
+            slug = self.kwargs['slug']
+            slugs = slug.split('/')
+            category_slug = slugs[-1]
+            
+            category =  get_object_or_404(Category, slug=category_slug)
+            if category.get_absolute_url()[1:] != 'category/' + slug:
+                raise  Http404()
+            
         context['category'] = category
         return context
  

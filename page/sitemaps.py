@@ -1,9 +1,10 @@
 from django.contrib.sitemaps import Sitemap
 from django.shortcuts import reverse
-from blog.models import Post
+from page.models import Page
 
-class PostSitemap(Sitemap):
+class PageSitemap(Sitemap):
     changefreq = 'weekly'
-    priority = 0.9
+    priority = 0.5
     def items(self):
-        return Post.objects.published()
+        return Page.objects.published()
+    

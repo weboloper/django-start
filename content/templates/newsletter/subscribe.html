@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            *  {
+                padding:0;
+                margin:0;
+            }
+            body  {
+                font-family:arial;
+                font-size:16px;
+                height:100vh;
+                width:100%
+                
+            }
+            .wrapper {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height:100%;
+            }
+
+            
+            /* Add some padding and a grey background color to containers */
+            .container {
+            padding: 20px;
+            background-color: #f1f1f1;
+            }
+
+            /* Style the input elements and the submit button */
+            input[type=email], input[type=submit] {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            }
+
+            /* Add margins to the checkbox */
+            input[type=checkbox] {
+            margin-top: 16px;
+            }
+
+            /* Style the submit button */
+            input[type=submit] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            }
+
+            input[type=submit]:hover {
+            opacity: 0.8;
+            }
+
+            .messages {
+                list-style:none;
+                padding:0;
+            }
+            .messages > li {
+                padding: .5rem 1rem;
+                margin-bottom:1rem;
+            }
+            .messages li.success {
+                background: #ddffe1;
+                color: #469731;
+            }
+            </style>
+    </head>
+    <body>
+    
+        <div class="wrapper">
+            <form method="POST">
+                {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+                <div class="container">
+                    <h2>Subscribe to our Newsletter</h2>
+                </div>
+
+                <div class="container" style="background-color:white">
+                    {{ form }}
+                    {% csrf_token %}
+                    <label>
+                    </label>
+                </div>
+
+                <div class="container">
+                    <input type="submit" value="Subscribe">
+                </div>
+            </form>
+        </div>
+    </body>
+</html>

@@ -9,35 +9,6 @@ from taggit.managers import TaggableManager
 from django.conf import settings
 from django.contrib.sites.models import Site
 
-class StaticPage(AbstractNodeModel):
-
-    parent = models.ForeignKey( "StaticPage" , verbose_name=_("Parent"),  on_delete=models.CASCADE, null=True, blank=True)
-    objects = BaseEntryManager()
-    def parental_path(self):
-        url = "/%s/" % self.slug
-        page = self
-        while page.parent:
-            url = "/%s%s" % (page.parent.slug,url)
-            page = page.parent
-        return url
-    
-    def get_absolute_url(self):
-        return self.parental_path()
-
-    def __str__(self):
-        full_path = [self.title]
-        k = self.parent
-        while k is not None:
-            full_path.append(k.title)
-            k = k.parent
-        return '/'.join(full_path[::-1])
-        
-    def save(self, *args, **kwargs):
-        if self.parent and self.parent.id == self.id:
-            # raise ValidationError('You can\'t have yourself as a parent!')
-            self.parent = None
-        return super(StaticPage, self).save(*args, **kwargs)
-
 
 class Category(SlugMixin):
 
@@ -45,6 +16,28 @@ class Category(SlugMixin):
         'self', null=True, blank=True,
         related_name='children', on_delete=models.CASCADE
     )
+    def __str__(self):
+        full_path = [self.title]
+        k = self.parent
+        while k is not None:
+            full_path.append(k.title)
+            k = k.parent
+        return '/'.join(full_path[::-1])
+
+    def get_children(self):
+        return Category.objects.filter(parent=self)
+    
+    @classmethod
+    def get_root(cls):
+        return cls.objects.get(parent=None)
+    
+    def get_absolute_url(self):
+        full_path = [self.slug]
+        k = self.parent
+        while k is not None:
+            full_path.append(k.slug)
+            k = k.parent
+        return '/category/' + '/'.join(full_path[::-1])
 
     def save(self, *args, **kwargs):
         # prevent a category to be itself parent
@@ -52,7 +45,7 @@ class Category(SlugMixin):
             # raise ValidationError('You can\'t have yourself as a parent!')
             self.parent = None
         super().save(*args, **kwargs)
-
+        
     class Meta:
         verbose_name = _("Category")
         verbose_name_plural = _("Categories")

@@ -1,4 +1,4 @@
-from blog.models import StaticPage, Post, Category
+from blog.models import   Post, Category
 from rest_framework import routers, serializers, pagination
 from taggit.models import Tag
 

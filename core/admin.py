@@ -8,9 +8,6 @@ from django import forms
 
 from core.models import  SiteSetting, Attachment,  CustomField
 
-
- 
-
 class CustomFieldInlineAdmin( GenericTabularInline):
     model = CustomField
     fields = ('meta_key', 'meta_value' )
@@ -30,7 +27,7 @@ class AttachmentAdmin(admin.ModelAdmin):
 class AbstractNodeModelAdmin(admin.ModelAdmin):
     # model = StaticPage
     view_on_site = True
-    list_display = ['title', 'created_at', 'status',  "view_on_site_link"]
+    list_display = ['__str__', 'created_at', 'status',  "view_on_site_link"]
     readonly_fields = ['updated_at']
     inlines = [AttachmentInlineAdmin, CustomFieldInlineAdmin]
 

@@ -37,10 +37,12 @@ INSTALLED_APPS = [
     'rest_framework',
 
     # Application apps
-    'accounts',
     'core',
+    'accounts',
+    'page',
     'blog',
     'main',
+    'newsletter'
     
 ]
 
@@ -186,4 +188,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 2
 }
- 
+
+MAILCHIMP_API_KEY = ''
+MAILCHIMP_DATA_CENTER = ''
+MAILCHIMP_EMAIL_LIST_ID = ''
