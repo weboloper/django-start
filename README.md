@@ -20,3 +20,5 @@ migrate and use
 - `{{ object.url_to_edit_object }}`
 - `{% has_permission request.user 'change_post' as has_permission_update %}`
 - `{% has_role request.user 'MODERATOR' as has_role_modarator %}`
+- `{% get_latest blog.Post 20 as latest_posts %}`
+- `{% get_related_posts post 5 as related_posts %}`

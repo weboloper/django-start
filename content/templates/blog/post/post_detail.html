@@ -6,6 +6,12 @@
 
 {% block content %}
      
+    {{ post.title }}
+
+    {% comment %} {% get_latest blog.Post 20 as latest_posts %}
+    {{ latest_posts }} {% endcomment %}
+    {% get_related_posts post 5 as related_posts %}`
+    
 
     {% get_comments for post as comments_list %}
     {% get_comments_count for post as comments_count %}

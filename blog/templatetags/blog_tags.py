@@ -5,6 +5,10 @@ from django.utils.translation import ugettext as _
 from django.utils.html import mark_safe
 from hashlib import md5
 import urllib
+from taggit.models import TaggedItem
+from django.apps import apps
+from blog.models import Post
+
 register = template.Library()
 
 class GetCommentCountNode(Node):
@@ -87,3 +91,38 @@ def gravatar_url(parser, token):
             parser.compile_filter(rating),
             default)
  
+class LatestContentNode(Node):
+    def __init__(self, model, varname, num=0):
+        self.num, self.varname = num, varname
+        self.model = apps.get_model(*model.split('.'))
+    
+    def render(self, context):
+        context[self.varname] = self.model.objects.all()
+        if(int(self.num) > 0):
+            context[self.varname] = context[self.varname][:int(self.num)]
+        return ''
+
+class RelatedPostNode(Node):
+    def __init__(self, instance, varname, num=0):
+        self.num, self.varname, self.instance = num, varname, instance
+        
+    def render(self, context):
+        obj = self.instance.resolve(context)
+        obj.tags.all()
+        # context[self.varname] = TaggedItem.objects.filter(tags__name__in=self.instance.resolve(context))
+        return ''
+
+@register.tag
+def get_related_posts(parser, token):
+    bits = token.contents.split()
+    if len(bits) < 5 or bits[3] != 'as':
+        raise TemplateSyntaxError
+    num = bits[2].upper() == 'ALL' and None or bits[2]
+    return RelatedPostNode(parser.compile_filter(bits[1]), bits[4], num)
+
+@register.tag
+def get_latest(parser, token):
+    bits = token.contents.split()
+    if len(bits) < 5 or bits[3] != 'as':
+        raise TemplateSyntaxError
+    return LatestContentNode(bits[1], bits[4], bits[2])
