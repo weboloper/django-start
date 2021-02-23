@@ -126,18 +126,18 @@ LANGUAGES = [
 TIME_ZONE = 'UTC'
 USE_TZ = True
 
-# STATIC_ROOT = '/home/USERNAME/public_html/DOMAIN_FOLDER/content/static'
-STATIC_ROOT = os.path.join(CONTENT_DIR, 'static')
+
+# ROOTS MUST BE ON MAIN DIRECTORY !!!
+STATIC_ROOT = '/home/USERNAME/DOMAIN_FOLDER/static'
 STATIC_URL = '/static/'
 
-# MEDIA_ROOT = '/home/USERNAME/public_html/DOMAIN_FOLDER/content/media'
-MEDIA_ROOT = os.path.join(CONTENT_DIR, 'media')
+STATIC_ROOT = '/home/USERNAME/DOMAIN_FOLDER/media'
 MEDIA_URL = '/media/'
 
 
-# if DEBUG:
-#     STATIC_ROOT = os.path.join(CONTENT_DIR, 'static')
-#     MEDIA_ROOT = os.path.join(CONTENT_DIR, 'media')
+if DEBUG :
+    STATIC_ROOT = os.path.join(CONTENT_DIR, 'static')
+    MEDIA_ROOT = os.path.join(CONTENT_DIR, 'media')
 
 STATICFILES_DIRS = [
     os.path.join(CONTENT_DIR, 'assets'),
@@ -176,18 +176,32 @@ TINYMCE_DEFAULT_CONFIG = {
     "removeformat | code |   help",
     "images_upload_url": '/upload_attachment_url/',
 
+    # URL settings
+    'convert_urls' : True,
+    'relative_urls' : False,
+    'remove_script_host' : False,
 }
 # TINYMCE_JS_URL = 'https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js'
 # TINYMCE_JS_URL = os.path.join(MEDIA_URL, "path/to/tinymce/tinymce.min.js")
 # TINYMCE_COMPRESSOR = False
+
+DEFAULT_RENDERER = ['rest_framework.renderers.JSONRenderer', ]
+if DEBUG:
+    DEFAULT_RENDERER.append('rest_framework.renderers.BrowsableAPIRenderer')
+
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 2
+    'PAGE_SIZE': 10,
+    'DEFAULT_RENDERER_CLASSES': DEFAULT_RENDERER,
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+    ]
 }
+CORS_ORIGIN_ALLOW_ALL = True
 
 MAILCHIMP_API_KEY = ''
 MAILCHIMP_DATA_CENTER = ''
