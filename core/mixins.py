@@ -57,7 +57,10 @@ class SlugMixin(models.Model):
         except AttributeError:
             raise AttributeError("Field '%s' was marked as field to be used as slug, but does not exist in '%s'" %
                                  (self.slugify_field, self.__class__.__name__))
-        return slugify(slugify_field_value)
+
+        txt = slugify_field_value.replace("ı","i")
+        return slugify(txt)                        
+        # return slugify(slugify_field_value)
  
     def __str__(self):
         return self.title

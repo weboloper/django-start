@@ -21,7 +21,8 @@ def unique_slug(queryset, slug_field, slug):
                 slug = slug.rsplit("-", 1)[0]
             slug = "%s-%s" % (slug, i)
         try:
-            queryset.get(**{slug_field: slug})
+            # queryset.get(**{slug_field: slug})
+            queryset.filter(**{slug_field: slug})[:1].get()
         except ObjectDoesNotExist:
             break
         i += 1
